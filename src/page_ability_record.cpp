@@ -221,7 +221,7 @@ AbilityConnectRecord *PageAbilityRecord::GetConnectRecord(const SvcIdentity &ser
     return nullptr;
 }
 
-void PageAbilityRecord::pushConnectRecord(AbilityConnectRecord *connectRecord)
+void PageAbilityRecord::PushConnectRecord(AbilityConnectRecord *connectRecord)
 {
     connectRecords_.emplace_back(connectRecord);
 }

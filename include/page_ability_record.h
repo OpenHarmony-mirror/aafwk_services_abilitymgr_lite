@@ -75,7 +75,7 @@ public:
     void SetConnectStatus(ConnectStatus connectStatus);
     void SetStartDone(bool startDone);
     AbilityConnectRecord *GetConnectRecord(const SvcIdentity &serviceSid) const;
-    void pushConnectRecord(AbilityConnectRecord *connectRecord);
+    void PushConnectRecord(AbilityConnectRecord *connectRecord);
     void RemoveConnectRecord(const SvcIdentity &serviceSid);
     bool IsPerformStop() const;
     AbilityConnectRecord *GetConnectRecord(const SvcIdentity &serviceSid, uint64_t abilityToken) const;
