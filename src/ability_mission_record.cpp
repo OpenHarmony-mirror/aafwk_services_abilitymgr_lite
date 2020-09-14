@@ -26,7 +26,7 @@ AbilityMissionRecord::AbilityMissionRecord(AbilityMissionStack* missionStack, co
     if (bundleName != nullptr) {
         bundleName_ = Utils::Strdup(bundleName);
     }
-    PRINTD("AbilityMissionRecord", "Constuctor");
+    PRINTD("AbilityMissionRecord", "Constructor");
 }
 
 AbilityMissionRecord::~AbilityMissionRecord()
@@ -34,7 +34,7 @@ AbilityMissionRecord::~AbilityMissionRecord()
     abilityMissionStack_ = nullptr;
     ClearPageAbility();
     AdapterFree(bundleName_);
-    PRINTD("AbilityMissionRecord", "Destuctor");
+    PRINTD("AbilityMissionRecord", "Destructor");
 }
 
 bool AbilityMissionRecord::IsEmpty() const

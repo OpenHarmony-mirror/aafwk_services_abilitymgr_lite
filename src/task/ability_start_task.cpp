@@ -53,7 +53,7 @@ AbilityMsStatus AbilityStartTask::Execute()
     // Step2: Generate target ability record.
     PageAbilityRecord *targetAbility = stackManager.GeneratePageAbility(
         *target_, *want_, topAbility, *abilityMgrContext_);
-    if (targetAbility == nullptr) {
+    if (targetAbility == nullptr || targetAbility == topAbility) {
         return AbilityMsStatus::TaskStatus("start", "generate ability record failure");
     }
     targetAbility->SetBundleInfo(*bundleInfo_);
@@ -63,8 +63,10 @@ AbilityMsStatus AbilityStartTask::Execute()
         topAbility->SetNextPageAbility(targetAbility);
         targetAbility->SetPrevPageAbility(topAbility);
         AbilityMsStatus status = topAbility->InactiveAbility();
-        if (!status.IsOk()) {
-            topAbility->SetNextPageAbility(nullptr);
+        if (status.IsOk()) {
+            topAbility->SetNextPageAbility(targetAbility);
+            targetAbility->SetPrevPageAbility(topAbility);
+        } else {
             stackManager.RemovePageAbility(*targetAbility, *abilityMgrContext_);
         }
         return status;
@@ -74,9 +76,6 @@ AbilityMsStatus AbilityStartTask::Execute()
     AbilityMsStatus status = targetAbility->StartAbility();
     if (status.IsProcessError() || status.IsTransactError()) {
         // Clean page ability record if failure
-        if (topAbility != nullptr) {
-            topAbility->SetNextPageAbility(nullptr);
-        }
         stackManager.RemovePageAbility(*targetAbility, *abilityMgrContext_);
     }
     return status;

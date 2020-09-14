@@ -27,6 +27,7 @@ PageAbilityRecord *AbilityStackManager::GeneratePageAbility(const AbilityInfo &t
 
     PageAbilityRecord *targetAbility = nullptr;
     AbilityMissionRecord *targetMission = stack->GetTargetMissionRecord(target.bundleName);
+    auto topMissionRecord = stack->GetTopMissionRecord();
     /* launcher -> default or default -> launcher */
     if (topAbility == nullptr || AbilityMsHelper::IsAceAbility(target.name) ||
         (!topAbility->IsLauncherAbility() && AbilityMsHelper::IsLauncherAbility(target.bundleName)) ||
@@ -39,24 +40,27 @@ PageAbilityRecord *AbilityStackManager::GeneratePageAbility(const AbilityInfo &t
             targetMission->PushPageAbility(*targetAbility);
             stack->PushTopMissionRecord(*targetMission);
         } else {
-            targetMission->SetPrevMissionRecord(nullptr);
             targetAbility = const_cast<PageAbilityRecord *>(targetMission->GetTopPageAbility());
             stack->MoveMissionRecordToTop(*targetMission);
         }
     } else {
         PRINTD("AbilityStackManager", "default application jumps to another default");
-        auto topMissionRecord = stack->GetTopMissionRecord();
         if (targetMission == nullptr) {
             targetMission = new AbilityMissionRecord(stack, target.bundleName);
             stack->PushTopMissionRecord(*targetMission);
         } else {
             stack->MoveMissionRecordToTop(*targetMission);
         }
-        if (topMissionRecord != nullptr && targetMission != topMissionRecord) {
-            targetMission->SetPrevMissionRecord(topMissionRecord);
-        }
         targetAbility = new PageAbilityRecord(target, want);
         targetMission->PushPageAbility(*targetAbility);
+    }
+
+    // default jumps to default, then return to default
+    if (topAbility != nullptr && !topAbility->IsLauncherAbility() &&
+        targetAbility != nullptr && !targetAbility->IsLauncherAbility()) {
+        if (targetMission != nullptr && topMissionRecord != nullptr && targetMission != topMissionRecord) {
+            targetMission->SetPrevMissionRecord(topMissionRecord);
+        }
     }
 
     amsContext.SetTopMissionStacks(stack);

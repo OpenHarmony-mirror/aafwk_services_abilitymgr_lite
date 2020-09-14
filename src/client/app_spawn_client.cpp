@@ -84,7 +84,8 @@ AbilityMsStatus AppSpawnClient::SpawnProcess(AppRecord &appRecord)
     } else {
         cJSON_AddStringToObject(root, "sharedLibPaths", appRecord.GetBundleInfo().sharedLibPath);
     }
-    cJSON_AddNumberToObject(root, "identityID", appRecord.GetIdentityId());
+    std::string identityId = std::to_string(appRecord.GetIdentityId());
+    cJSON_AddStringToObject(root, "identityID", identityId.c_str());
     cJSON_AddNumberToObject(root, "uID", appRecord.GetBundleInfo().uid);
     cJSON_AddNumberToObject(root, "gID", appRecord.GetBundleInfo().gid);
 
