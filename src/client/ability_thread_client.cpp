@@ -42,6 +42,11 @@ AbilityThreadClient::AbilityThreadClient(const AbilityThreadClient &client)
 {
 }
 
+AbilityThreadClient::~AbilityThreadClient()
+{
+    UnRegisteDeathCallback(svcIdentity_, cbid_);
+}
+
 AbilityMsStatus AbilityThreadClient::Initialize(const char *bundleName)
 {
     if (bundleName == nullptr) {
