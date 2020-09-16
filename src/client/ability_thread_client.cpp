@@ -44,7 +44,7 @@ AbilityThreadClient::AbilityThreadClient(const AbilityThreadClient &client)
 
 AbilityThreadClient::~AbilityThreadClient()
 {
-    UnRegisteDeathCallback(svcIdentity_, cbid_);
+    UnregisterDeathCallback(svcIdentity_, cbid_);
 }
 
 AbilityMsStatus AbilityThreadClient::Initialize(const char *bundleName)
@@ -58,7 +58,7 @@ AbilityMsStatus AbilityThreadClient::Initialize(const char *bundleName)
         delete appInfo;
         return AbilityMsStatus::AppTransanctStatus("memory alloc fail");
     }
-    if (RegisteDeathCallback(nullptr, svcIdentity_, deathHandler_, appInfo, &cbid_) != LITEIPC_OK) {
+    if (RegisterDeathCallback(nullptr, svcIdentity_, deathHandler_, appInfo, &cbid_) != LITEIPC_OK) {
         AdapterFree(appInfo->bundleName);
         delete appInfo;
         return AbilityMsStatus::AppTransanctStatus("register death callback ipc error");
